@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фильтр товаров</title>
+    <script>
+        // Функция для получения значения Cookie по имени
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        // Функция для установки Cookie
+        function setCookie(name, value, days) {
+            const d = new Date();
+            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + d.toUTCString();
+            document.cookie = `${name}=${value}; ${expires}; path=/`;
+        }
+
+        // Функция для загрузки сохраненных фильтров
+        function loadFilters() {
+            const category = getCookie('filterCategory');
+            const color = getCookie('filterColor');
+
+            if (category) {
+                document.querySelector('select[name="category"]').value = category;
+            }
+            if (color) {
+                document.querySelector('select[name="color"]').value = color;
+            }
+        }
+
+        // Функция для обработки изменения фильтров
+        function applyFilters() {
+            const selectedCategory = document.querySelector('select[name="category"]').value;
+            const selectedColor = document.querySelector('select[name="color"]').value;
+            
+            setCookie('filterCategory', selectedCategory, 30); // Сохраняем категорию на 30 дней
+            setCookie('filterColor', selectedColor, 30); // Сохраняем цвет на 30 дней
+
+            // Здесь можно добавить код для обновления списка товаров на основе выбранных фильтров
+            alert(`Фильтры применены:\nКатегория: ${selectedCategory}\nЦвет: ${selectedColor}`);
+        }
+
+        window.onload = loadFilters; // Загружаем фильтры при загрузке страницы
+    </script>
+</head>
+<body>
+    <h1>Фильтр товаров</h1>
+    <form id="filterForm">
+        <label for="category">Категория:</label>
+        <select name="category" id="category" onchange="applyFilters()">
+            <option value="electronics">Электроника</option>
+            <option value="clothing">Одежда</option>
+            <option value="books">Книги</option>
+        </select>
+
+        <label for="color">Цвет:</label>
+        <select name="color" id="color" onchange="applyFilters()">
+            <option value="red">Красный</option>
+            <option value="blue">Синий</option>
+            <option value="green">Зеленый</option>
+        </select>
+    </form>
+
+    <h2>Список товаров</h2>
+    <!-- Здесь будет отображаться список товаров на основе выбранных фильтров -->
+</body>
+</html>
